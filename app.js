@@ -1,111 +1,78 @@
 
-let questions=[]
-let current=0
-let answers=[]
-let timer
-let timeLeft=60
-let globalTime=0
-let globalInterval
+let total=50
+let pool=[...preguntas].sort(()=>Math.random()-0.5).slice(0,total)
+let i=0
+let answers=new Array(total).fill(null)
 
-function startTest(i){
-questions = tests[i].sort(()=>Math.random()-0.5)
-document.getElementById("menu").classList.add("hidden")
-document.getElementById("quiz").classList.remove("hidden")
+const q=document.getElementById("question")
+const opts=document.getElementById("options")
+const prog=document.getElementById("progress")
+const counter=document.getElementById("qcounter")
+const fb=document.getElementById("feedback")
 
-answers = new Array(questions.length)
-
-createProgress()
-
-globalInterval=setInterval(()=>{
-globalTime++
-document.getElementById("global").innerText="Tiempo total: "+globalTime+"s"
-},1000)
-
-load()
-}
-
-function createProgress(){
-let p=document.getElementById("progress")
-p.innerHTML=""
-for(let i=0;i<questions.length;i++){
-let b=document.createElement("div")
-b.className="box"
-p.appendChild(b)
+function buildProgress(){
+prog.innerHTML=""
+for(let k=0;k<total;k++){
+let d=document.createElement("div")
+d.className="box"
+prog.appendChild(d)
 }
 }
 
-function load(){
-clearInterval(timer)
-timeLeft=60
-document.getElementById("timer").innerText="Tiempo: "+timeLeft
+function render(){
 
-timer=setInterval(()=>{
-timeLeft--
-document.getElementById("timer").innerText="Tiempo: "+timeLeft
-if(timeLeft<=0){mark(false);next()}
-},1000)
+counter.innerText="Pregunta "+(i+1)+" / "+total
 
-let q=questions[current]
-document.getElementById("counter").innerText="Pregunta "+(current+1)+"/"+questions.length
-document.getElementById("question").innerText=q.q
+let p=pool[i]
+q.innerText=p.q
+opts.innerHTML=""
+fb.innerText=""
 
-let a=document.getElementById("answers")
-a.innerHTML=""
-
-q.options.forEach((opt,i)=>{
+p.options.forEach((t,idx)=>{
 let b=document.createElement("button")
-b.innerText=opt
-b.onclick=()=>answer(i)
-a.appendChild(b)
+b.className="option"
+b.innerText=t
+b.onclick=()=>answer(idx)
+opts.appendChild(b)
 })
 
 updateProgress()
 }
 
-function answer(i){
-let q=questions[current]
-let correct=(i===q.correct)
-answers[current]=i
-mark(correct)
-alert("Respuesta correcta: "+q.options[q.correct])
-}
+function answer(idx){
+answers[i]=idx
+let p=pool[i]
 
-function mark(correct){
-let boxes=document.querySelectorAll(".box")
-boxes[current].classList.remove("current")
-boxes[current].classList.add(correct?"correct":"wrong")
+let buttons=document.querySelectorAll(".option")
+buttons.forEach((b,n)=>{
+if(n==p.correct) b.classList.add("correct")
+if(n==idx && n!=p.correct) b.classList.add("wrong")
+})
+
+fb.innerText="Respuesta correcta: "+["A","B","C","D"][p.correct]
+
+updateProgress()
 }
 
 function updateProgress(){
 let boxes=document.querySelectorAll(".box")
-boxes.forEach(b=>b.classList.remove("current"))
-boxes[current].classList.add("current")
+boxes.forEach((b,k)=>{
+b.className="box"
+if(k==i) b.classList.add("current")
+if(answers[k]!=null){
+if(answers[k]==pool[k].correct) b.classList.add("ok")
+else b.classList.add("bad")
+}
+})
 }
 
 function next(){
-if(current<questions.length-1){current++;load()}
-else finish()
+if(i<total-1){i++;render()}
 }
 
 function prev(){
-if(current>0){current--;load()}
+if(i>0){i--;render()}
 }
 
-function finish(){
-clearInterval(timer)
-clearInterval(globalInterval)
-document.getElementById("quiz").classList.add("hidden")
-document.getElementById("result").classList.remove("hidden")
-
-let score=0
-questions.forEach((q,i)=>{if(answers[i]===q.correct)score++})
-
-let note=((score/questions.length)*10).toFixed(2)
-
-document.getElementById("score").innerText=
-"Aciertos: "+score+" | Fallos: "+(questions.length-score)+" | Nota: "+note
-}
-
-function exitTest(){
-location.reload()
-}
+buildProgress()
+render()
