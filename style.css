@@ -1,0 +1,11 @@
+
+body{font-family:Arial;text-align:center;background:#f2f4f8;margin:0}
+button{padding:10px 20px;margin:5px;font-size:16px}
+.hidden{display:none}
+#answers button{display:block;width:70%;margin:10px auto}
+#progress{display:flex;flex-wrap:wrap;justify-content:center;margin:15px}
+.box{width:18px;height:18px;margin:2px;background:#ddd}
+.correct{background:#4CAF50}
+.wrong{background:#F44336}
+.current{background:#2196F3}
+.top{display:flex;justify-content:space-around}

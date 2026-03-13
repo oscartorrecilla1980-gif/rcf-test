@@ -1,0 +1,57 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Test RCF</title>
+<link rel="manifest" href="manifest.json">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div id="menu">
+<h1>TEST RCF</h1>
+<button onclick="startTest(0)">TEST 1</button>
+<button onclick="startTest(1)">TEST 2</button>
+<button onclick="startTest(2)">TEST 3</button>
+<button onclick="startTest(3)">TEST 4</button>
+</div>
+
+<div id="quiz" class="hidden">
+<div class="top">
+<div id="counter"></div>
+<div id="timer"></div>
+<div id="global"></div>
+</div>
+
+<div id="progress"></div>
+
+<h2 id="question"></h2>
+
+<div id="answers"></div>
+
+<div class="nav">
+<button onclick="prev()">Anterior</button>
+<button onclick="next()">Siguiente</button>
+<button onclick="exitTest()">Salir</button>
+</div>
+</div>
+
+<div id="result" class="hidden">
+<h2>Resultado</h2>
+<div id="score"></div>
+<button onclick="location.reload()">Volver</button>
+</div>
+
+<script src="preguntas.js"></script>
+<script src="app.js"></script>
+
+<script>
+if ('serviceWorker' in navigator) {
+ navigator.serviceWorker.register('sw.js');
+}
+</script>
+
+</body>
+</html>
