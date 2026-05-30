@@ -37,6 +37,7 @@ opts.appendChild(b)
 })
 
 updateProgress()
+updateButtons()
 }
 
 function answer(idx){
@@ -64,6 +65,13 @@ if(answers[k]==pool[k].correct) b.classList.add("ok")
 else b.classList.add("bad")
 }
 })
+}
+
+function updateButtons(){
+const btnAnterior=document.querySelector("button[onclick='prev()']");
+const btnSiguiente=document.querySelector("button[onclick='next()']");
+if(btnAnterior) btnAnterior.disabled = (i===0);
+if(btnSiguiente) btnSiguiente.disabled = (i===total-1);
 }
 
 function next(){
